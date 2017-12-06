@@ -4,8 +4,9 @@
         <meta charset="utf-8">
         <title></title>
         <link rel="stylesheet" href="/vendor/bootstrap/dist/css/bootstrap.min.css" media="screen" title="no title" charset="utf-8">
+        <link rel="stylesheet" href="/apps/citation/css/font-awesome-4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="/apps/citation/css/loader.css" media="screen" title="no title" charset="utf-8">
-        <link rel="stylesheet" href="/apps/citation/css/edit-modal.css" media="screen" title="no title" charset="utf-8">
+
     </head>
     <style media="screen">
         body {
@@ -14,106 +15,142 @@
     </style>
     <body ng-controller="AppCtrl">
         <header>
-<!-- 
-            <div class="alert alert-danger">
-              <h4>
-                {{notification}}
-              </h4>
+            <div class="alert alert-danger alert-dismissable" style="width: 50%;margin: 5px 0 0 25%;" ng-if="hasError">
+              <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+              {{notification}}
             </div>
--->
             <div id="wrap" class="row">
                 <div class="col-md-12 text-center">
 
-                    <h1>Citation App <small>Simple and clean</small></h1>
+                    <h1>App</h1>
                     <hr>
                 </div>
             </div>
         </header>
         <div id="wrap" class="container">
+          <div id="wrapper" class="searchPanel col-md-6 col-md-offset-3" style="border: solid 1px #eeeeef;border-radius: 10px;padding: 16px;">
             <div class="row">
-                <div class="col-md-6 col-md-offset-3">
+                <div class="col-md-12">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                              <input type="text" class="form-control" id="search" placeholder="search...." ng-model="search.$">
+                              <input type="date" class="form-control" id="startingDate" placeholder="Enter starting date" ng-model="criteria.startingDate">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                              <select class="form-control" name="author" ng-model="search.author">
-                                  <option value="{{author}}" ng-repeat="author in authors"> {{author}}</option>
+                              <select class="form-control" name="productReference" ng-model="criteria.productReference">
+                                  <option value="">Choose a product reference</option>
+                                  <option value="{{productItem}}" ng-repeat="productItem in productsReference"> {{productItem}}</option>
                               </select>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-2">
-                  <a href="#" class="btn btn-md btn-success" ng-click="modalType(0); citationModal={}" data-toggle="modal" data-target="#myModal" style="float: right;">
-                    New quote
-                  </a>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                              <select class="form-control" name="currency" ng-model="criteria.currency">
+                                  <option value="">Choose a product reference</option>
+                                  <option value="{{currency}}" ng-repeat="currency in currencies"> {{currency}}</option>
+                              </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                              <input type="number" class="form-control" id="numberOfPax" placeholder="Enter number of pax" ng-model="criteria.numberOfPax">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                              <input type="number" class="form-control" id="numberOfLeaders" placeholder="Enter number of leaders" ng-model="criteria.numberOfLeaders">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-10 col-md-offset-1" ng-repeat="citation in citations | filter: search" ng-if="!citationLoading">
-                    <div class="row" style="background-color: rgba(0, 0, 0, 0.02);">
-                        <a href="#" class="btn btn-xs btn-danger" ng-click="deleteCitation(citation._id)" style="float: right;">
-                            <span class="glyphicon glyphicon-remove">
-                            </span>
-                        </a>
-                        <a href="#" ng-click="modalType(1); toUpdateCitation(citation)" data-toggle="modal" data-target="#myModal" class="btn btn-xs btn-warning" style="float: right;">
-                            <span class="glyphicon glyphicon-edit">
-                            </span>
-                        </a>
-                    </div>
-                    <div class="row" style="background-color: rgba(0, 0, 0, 0.02);">
-                        <blockquote>
-                            <p>{{citation.quote}}</p>
-
-                            <cite class="pull-right">{{citation.author}}</cite>
-                        </blockquote>
-                    </div>
-                    <hr>
-                </div>
-
-                <div class="col-md-12 text-center" ng-if="citationLoading">
-                    <div class="spinner">
-                        <div class="dot1"></div>
-                        <div class="dot2"></div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-        <!-- Modal -->
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-6 col-sm-offset-3 text-center">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          ×
-                        </button>
-                        <br><br>
-                        <div class="form-group">
-                          <textarea id="quote" class="form-control" rows="3" ng-model="citationModal.quote">
-                          </textarea>
-                        </div>
-                        <div class="form-group">
-                          <input type="text" class="form-control" id="author" ng-model="citationModal.author">
-                        </div>
-                        <hr>
-                        <div class="form-group" ng-show="modalTyper">
-                            <button ng-click="newCitation(citationModal)" type="submit" class="btn btn-success btn-lg" data-dismiss="modal">
-                                Add
-                            </button>
-                        </div>
-                        <div class="form-group" ng-show="!modalTyper">
-                            <button ng-click="updateCitation(citationModal)" type="submit" class="btn btn-warning btn-lg" data-dismiss="modal">
-                                Edit
-                            </button>
-                        </div>
-                    </div>
+                <div class="col-md-12">
+                  <a href="#" class="btn btn-md btn-primary" ng-click="searchByCriteria(criteria);" style="width: 100%;">
+                    Search
+                  </a>
                 </div>
             </div>
+          </div>
+          <div class="col-md-12" style="border: solid 1px #eeeeef;border-radius: 10px;margin-top: 16px;">
+                  <div class="row" style="background-color: rgba(0, 0, 0, 0.02);" ng-if="!apiCallLoading && hasResult">
+                    <table id="myTable" class=" table order-list">
+                    <thead>
+                        <tr>
+                            <td>Day</td>
+                            <td>Date</td>
+                            <td>Expense Description</td>
+                            <td>Budget Currency</td>
+                            <td>Budget Amount</td>
+                            <td>Actual Budget Currency</td>
+                            <td>Actual Budget Amount</td>
+                            <td>Actions</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="product in productsDetailArray">
+                            <td class="col-sm-1">
+                                <input type="text" name="day" class="form-control" ng-model="product.DayNumber" ng-disabled="product.isDefault" ng-if="!product.saved"/>
+                                <span ng-if="product.saved">{{product.DayNumber}}</span>
+                            </td>
+                            <td class="col-sm-2">
+                                <input type="text" name="date"  class="form-control" ng-model="product.ItineraryDayDate" ng-disabled="product.isDefault" ng-if="!product.saved"/>
+                                <span ng-if="product.saved">{{product.ItineraryDayDate}}</span>
+                            </td>
+                            <td class="col-sm-3">
+                                <input type="text" name="expenceDescription"  class="form-control" ng-model="product.ElementTitle" ng-disabled="product.isDefault" ng-if="!product.saved"/>
+                                <span ng-if="product.saved">{{product.ElementTitle}}</span>
+                            </td>
+                            <td class="col-sm-1">
+                                <input type="text" name="budgetCurrency"  class="form-control" ng-model="product.CurrencyCode" ng-disabled="product.isDefault" ng-if="!product.saved"/>
+                                <span ng-if="product.saved">{{product.CurrencyCode}}</span>
+                            </td>
+                            <td class="col-sm-1">
+                                <input type="text" name="budgetAmount"  class="form-control" ng-model="product.budgetAmount" ng-disabled="product.isDefault" ng-if="!product.saved"/>
+                                <span ng-if="product.saved">{{product.budgetAmount}}</span>
+                            </td>
+                            <td class="col-sm-1">
+                                <input type="text" name="actualBudgetCurrency"  class="form-control" ng-model="product.actualBudgetCurrency" ng-if="!product.saved"/>
+                                <span ng-if="product.saved">{{product.actualBudgetCurrency}}</span>
+                            </td>
+                            <td class="col-sm-2">
+                                <input type="text" name="actualBudgetAmount"  class="form-control" ng-model="product.actualBudgetAmount" ng-if="!product.saved"/>
+                                <span ng-if="product.saved">{{product.actualBudgetAmount}}</span>
+                            </td>
+                            <td class="col-sm-1">
+                              <a class="saveRow" ng-click="saveRow(product);" style="color: #5cb85c;" ng-if="!product.saved"><i class="fa fa-check-square-o fa-2x" aria-hidden="true"></i></a>
+                              <a class="editRow" ng-click="editRow(product);" style="color: #f0ad4e;" ng-if="product.saved"><i class="fa fa-pencil-square-o fa-2x" aria-hidden="true"></i></a>
+                              <a class="removeRow" ng-click="removeRow(product);" style="color: #ac2a25;" ng-if="!product.isDefault"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="7" style="text-align: left;">
+                                <input type="button" class="btn btn-lg btn-block" style="color: #5cb85c;" id="addrow" value="Add Row" ng-click="addNewRow();" />
+                            </td>
+                        </tr>
+                        <tr>
+                        </tr>
+                    </tfoot>
+                </table>
+                  <hr>
+              </div>
+              <div class="col-md-12 text-center" ng-if="apiCallLoading">
+                  <div class="spinner">
+                      <div class="dot1"></div>
+                      <div class="dot2"></div>
+                  </div>
+              </div>
+          </div>
         </div>
 
         <script src="/vendor/jquery/dist/jquery.min.js" charset="utf-8"></script>
@@ -122,6 +159,7 @@
         <!--Angular Lib-->
 
         <script src="/vendor/angular/angular.min.js" charset="utf-8"></script>
+        <!-- <script src="/apps/citation/js/ngcsv.js"></script> -->
 
         <!--App dependencies-->
         <script src="/apps/citation/app/app.js" charset="utf-8"></script>

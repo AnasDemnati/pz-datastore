@@ -10,6 +10,7 @@
 
     function DataStore($http, $q) {
         var services = {
+            getExcelData: getExcelData,
             getCitations: getCitations,
             getCitationsAuthors: getCitationsAuthors,
             deleteCitation: deleteCitation,
@@ -21,6 +22,19 @@
 
 
         // Your functions
+
+        function getExcelData(criteriaObj) {
+          var deferred = $q.defer();
+
+          $http.post('/api/v1/jsonData/', criteriaObj)
+            .success(function(resp, status) {
+              deferred.resolve(resp);
+            })
+            .error(function(error, status) {
+              deferred.reject(error);
+            });
+          return deferred.promise;
+        }
 
         function getCitations() {
             var deferred = $q.defer();

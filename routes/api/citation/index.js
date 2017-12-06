@@ -5,6 +5,8 @@ const route = express.Router();
 
 const citationController = require('./citation.controller');
 
+route.post('/jsonData/', citationController.getJsonData);
+
 route.get('/citations/', citationController.getCitations);
 
 route.get('/citations/:id', citationController.getCitationById);
