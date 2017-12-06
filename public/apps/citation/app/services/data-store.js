@@ -28,11 +28,10 @@
 
           $http.post('/api/v1/jsonData/', criteriaObj)
             .then(function(resp) {
-              deferred.resolve(resp);
+              return resp.data;
             }, function(error) {
-              deferred.reject(error);
+              return error;
             });
-          return deferred.promise;
         }
 
         function getCitations() {
