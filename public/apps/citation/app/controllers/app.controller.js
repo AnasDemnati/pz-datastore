@@ -83,7 +83,7 @@
             DataStore.getExcelData(criteriaObj)
               .then(function(jsonData) {
                 console.log(jsonData);
-                $scope.productsDetailArray = jsonData;
+                $scope.productsDetailArray = jsonData.data;
                 $scope.hasResult = true;
                 $scope.hasError = false;
                 $scope.apiCallLoading = false;
