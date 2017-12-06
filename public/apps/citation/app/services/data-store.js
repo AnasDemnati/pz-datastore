@@ -27,10 +27,9 @@
           var deferred = $q.defer();
 
           $http.post('/api/v1/jsonData/', criteriaObj)
-            .success(function(resp, status) {
+            .then(function(resp) {
               deferred.resolve(resp);
-            })
-            .error(function(error, status) {
+            }, function(error) {
               deferred.reject(error);
             });
           return deferred.promise;
