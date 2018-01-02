@@ -1,14 +1,22 @@
 'use strict';
 
-const express =require('express');
-const swig = require('swig');
+// Set default node environment to development
+process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+
+const express = require('express');
+const path = require('path');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const fs = require('fs');
+const swig = require('swig');
+const expressValidator = require('express-validator');
 const mongoose = require('mongoose');
-
-const Citation = require('./models/citation');
-
 const app = express();
+
+const config = require('./config');
+
+const fs = require('fs');
+var _ = require("lodash");
 
 app.use(express.static(__dirname + '/public'));
 
@@ -32,32 +40,47 @@ swig.setDefaults({ cache: false });
 
 const port = process.env.PORT || 3400;
 
+mongoose.connect(config.mongo.uri);
 
-app.get('/', (req, res, next) => {
+// uncomment after placing your favicon in /public
+//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+// Express Validator
+app.use(expressValidator());
 
-    let limit = req.body.limit || 0;
+app.use(logger('dev'));
+app.use(cookieParser());
 
-    Citation.find({}).limit(limit).exec((err, citations)  => {
-        if(err) {
-            return res.rend('index', {
-                error: err.message
-            });
-            //return res.send({message: err.message});
-        }
-        //return res.send(citations);
-        return res.render('index', {
-            proverbes: citations
-        });
-    });
+require('./routes')(app);
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
 });
 
-// API Citaiton
-app.use('/api/v1/', require('./routes/api/citation'));
+// error handlers
 
-// API Author
-app.use('/api/v1/', require('./routes/api/author'));
+// development error handler
+// will print stacktrace
+if (app.get('env') === 'development') {
+  app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    res.render('error', {
+      message: err.message,
+      error: err
+    });
+  });
+}
 
-app.use('/', require('./routes/static'));
+// production error handler
+// no stacktraces leaked to user
+app.use(function(err, req, res, next) {
+  res.status(err.status || 500);
+  res.render('error', {
+    message: err.message,
+    error: {}
+  });
+});
 
 app.listen(port, function(err) {
     if(err) console.error(err);
