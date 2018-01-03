@@ -1,0 +1,10 @@
+{% block content %}
+
+    <div class="jumbotron">
+      <h1>{{message}} <small>{{error.status}}</small></h1>
+      <code>
+          {{error.stack}}
+      </code>
+    </div>
+
+{% endblock %}
