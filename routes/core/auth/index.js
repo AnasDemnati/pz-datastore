@@ -11,5 +11,6 @@ require('./local/passport').setup(User, config);
 var router = express.Router();
 
 router.use('/', require('./local'));
+// router.use('/verify/:verification_token', require('./local'));
 
 module.exports = router;

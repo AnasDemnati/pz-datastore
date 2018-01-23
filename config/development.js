@@ -5,7 +5,7 @@
 module.exports = {
   // MongoDB connection options
   mongo: {
-    uri: 'mongodb://localhost/excelreader'
+    uri: 'mongodb://localhost/leaderAccountSystem'
     // uri: 'mongodb://otawara:rouidate159357@ds011432.mlab.com:11432/easyshopdb'
   },
 

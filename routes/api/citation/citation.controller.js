@@ -1,6 +1,5 @@
 'use strict';
 
-const Citation = require('../../../models/citation');
 const excelReader = require('../../../excelReader');
 var async = require('async');
 var moment = require('moment');
@@ -8,25 +7,29 @@ var moment = require('moment');
 
 exports.getJsonData = (req, res) => {
   let startingDate = req.body.startingDate;
-  let productReference = req.body.productReference;
-  let currency = req.body.currency;
+  let productCode = req.body.productCode;
+  let brand = req.body.brand;
   let numberOfPax = req.body.numberOfPax;
-  let numberOfLeaders = req.body.numberOfLeaders;
 
     if(!startingDate) {
         return res.send(402, {message: 'Starting date is required '});
-    } else if(!productReference) {
-        return res.send(402, {message: 'Product reference is required '});
-    } else if(!currency) {
+    } else if(!productCode) {
+        return res.send(402, {message: 'Product code is required '});
+    } else if(!brand) {
         return res.send(402, {message: 'Currency is required '});
     } else if(!numberOfPax) {
         return res.send(402, {message: 'Number of pax is required '});
-    } else if(!numberOfLeaders) {
-        return res.send(402, {message: 'Number of leaders is required '});
     } else {
-    excelReader.filteredResult(productReference, function(filteredResultArray) {
+    excelReader.filteredResult(productCode, function(filteredResultArray) {
+      let departure = {};
       let searchResult = [];
       let index = 0;
+
+      departure.tripCode = productCode + startingDate.toString().replace("-","").substring(2,7);
+      departure.productCode = productCode;
+      departure.startingDate = moment(startingDate, moment.ISO_8601).format("MM/DD/YYYY H:mm");
+      departure.endingDate = moment(startingDate, moment.ISO_8601).add(filteredResultArray[filteredResultArray.length-1].DayNumber, 'd').format("MM/DD/YYYY H:mm");
+      departure.numberOfPax = numberOfPax;
 
       filteredResultArray.forEach((item) => {
         let startingDateformatted = moment(startingDate, moment.ISO_8601).add(item.DayNumber - 1, 'd').format("MM/DD/YYYY H:mm");
@@ -41,15 +44,17 @@ exports.getJsonData = (req, res) => {
           CurrencyCode : item.CurrencyCode,
           PaymentArrangementName : item.PaymentArrangementName,
           PaxCost : item['PaxCost_' + numberOfPax],
-          LeaderCost : item['LeaderCost_' + numberOfLeaders],
-          budgetAmount : (parseFloat(item['PaxCost_' + numberOfPax]) + parseFloat(item['LeaderCost_' + numberOfLeaders])).toFixed(2),
+          LeaderCost : item['LeaderCost_1'],
+          budgetAmount : (parseFloat(item['PaxCost_' + numberOfPax]) + parseFloat(item['LeaderCost_1'])).toFixed(2),
           actualBudgetAmount : 'N/A',
           actualBudgetCurrency : 'N/A'
         });
         index++;
       });
 
-      return res.send(200, searchResult);
+      departure.accounts = searchResult;
+
+      return res.send(200, departure);
     });
   }
 };

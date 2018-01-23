@@ -1,6 +1,5 @@
 'use strict';
 
-const Author = require('../../../models/author');
 
 // Get all Authors
 exports.getAuthors = (req, res) => {

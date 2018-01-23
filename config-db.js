@@ -2,10 +2,10 @@
 
 const mongoose = require('mongoose');
 
-const proverbDB = mongoose.connect("mongodb://localhost/proverbs", (err) => {
+const leaderAccountSystemDB = mongoose.connect("mongodb://localhost/leaderAccountSystem", (err) => {
     if(err) console.log(err);
 
-    console.log(`The connection has been established on mongodb://localhost/proverbs`);
+    console.log(`The connection has been established on mongodb://localhost/leaderAccountSystem`);
 });
 
-exports.proverbDB = proverbDB;
+exports.leaderAccountSystemDB = leaderAccountSystemDB;

@@ -1,6 +1,21 @@
 'use strict';
 
+var nodemailer = require("nodemailer");
 const User = require('../../../models/user');
+
+/*
+    Here we are configuring our SMTP Server details.
+    STMP is mail server which is responsible for sending and recieving email.
+*/
+var smtpTransport = nodemailer.createTransport({
+    service: "Gmail",
+    auth: {
+        user: "anas.demnati2@gmail.com",
+        pass: "hzvbtytxxerqlwdc"
+    }
+});
+var rand,mailOptions,host,link;
+/*------------------SMTP Over-----------------------------*/
 
 exports.validateUser = (req, res, next) => {
     req.checkBody('firstName', 'The first name is require').notEmpty();
@@ -46,7 +61,24 @@ exports.create = (req, res, next) => {
                 err: err
             });
         } else {
-            //TODO send activation email
+            //Send activation email
+        host=req.get('host');
+        link="http://"+req.get('host')+"/verify/verification_token="+user._id;
+        mailOptions={
+            to : req.body.email,
+            subject : "Please confirm your Email account",
+            html : "Hello,<br> Please Click on the link to verify your email.<br><a href="+link+">Click here to verify</a>"
+        };
+        console.log(mailOptions);
+        smtpTransport.sendMail(mailOptions, function(error, response){
+         if(error){
+                console.log(error);
+            res.end("error");
+         }else{
+                console.log("Message sent: " + response.message);
+            res.end("sent");
+             }
+      });
             return res.send({
                 ok: true,
                 data: user,
@@ -127,7 +159,7 @@ exports.delete = (req, res, next) => {
 };
 
 exports.getAllUsers = (req, res, next) => {
-    User.find({"deleted" : false})
+    User.find({})
         .exec((err, users) => {
         if(err || !users) {
             return res.send({

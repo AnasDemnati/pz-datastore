@@ -3,6 +3,7 @@
 var express = require('express');
 var passport = require('passport');
 var auth = require('../auth.service');
+const User = require('../../../../models/user');
 //var Accounts = require('../../../api/user/lib/account-utility');
 //var mailAuth = require('../../../core/mailing-service').mailAuth;
 var router = express.Router();
@@ -16,7 +17,8 @@ var router = express.Router();
 *
 * @apiSuccess {String} message the authentication token.
 */
-router.post('/', function(req, res, next) {
+router.post('/signIn', function(req, res, next) {
+    console.log("post");
     passport.authenticate('local', function (err, user, info) {
         var error = err || info;
         if (error) return res.json(401, error);
@@ -25,6 +27,83 @@ router.post('/', function(req, res, next) {
         res.json({token: token, role: user.role});
     })(req, res, next);
 });
+
+var nodemailer = require("nodemailer");
+
+/*
+    Here we are configuring our SMTP Server details.
+    STMP is mail server which is responsible for sending and recieving email.
+*/
+var smtpTransport = nodemailer.createTransport({
+    service: "Gmail",
+    auth: {
+        user: "anas.demnati2@gmail.com",
+        pass: "hzvbtytxxerqlwdc"
+    }
+});
+var rand,mailOptions,host,link;
+/*------------------SMTP Over-----------------------------*/
+
+/*------------------Routing Started ------------------------*/
+
+router.get('/send',function(req,res, next){
+        rand=Math.floor((Math.random() * 100) + 54);
+    host=req.get('host');
+    link="http://"+req.get('host')+"/verify?id="+rand;
+    mailOptions={
+        to : req.query.to,
+        subject : "Please confirm your Email account",
+        html : "Hello,<br> Please Click on the link to verify your email.<br><a href="+link+">Click here to verify</a>"
+    };
+    console.log(mailOptions);
+    smtpTransport.sendMail(mailOptions, function(error, response){
+     if(error){
+            console.log(error);
+        res.end("error");
+     }else{
+            console.log("Message sent: " + response.message);
+        res.end("sent");
+         }
+  });
+});
+
+router.get('/verify/:verification_token', function(req, res, next) {
+    console.log(req.protocol+":/"+req.get('host'));
+    // if ((req.protocol+"://"+req.get('host'))==("http://"+host)) {
+        console.log("Domain is matched. Information is from Authentic email");
+        console.log(req.params);
+
+        User.findById(req.params.verification_token)
+            .exec((err, user) => {
+                if(err || !user) {
+                    return res.send({
+                        ok: false,
+                        message: 'User '+req.params.verification_token+' not found'
+                    });
+                }
+
+                console.log("email is verified");
+                // res.end("<h1>Email "+mailOptions.to+" is been Successfully verified");
+                user.active = true;
+                user.updated = new Date();
+
+                user.save((err) => {
+                    if(err) {
+                        return res.send({
+                            ok: false,
+                            message: 'Error updating profile please try later!'
+                        });
+                    }
+                    return res.send({
+                        ok: true,
+                        message: 'Email account '+ user.email +' has been verified.'
+                    });
+                });
+            });
+    // }
+});
+
+/*--------------------Routing Over----------------------------*/
 
 /**
 * @api {get} /auth/local/activate-account Activate the user account

@@ -11,7 +11,7 @@ var UserSchema = new Schema({
     },
     role: {
         type: String,
-        enum: ['user', 'admin'],
+        enum: ['user', 'admin', 'leader'],
         default: 'user'
     },
     active: {
@@ -20,6 +20,7 @@ var UserSchema = new Schema({
     },
     hashedPassword: String,
     salt: String,
+    userCode: String,
     firstName: String,
     lastName: String,
     gender: {
