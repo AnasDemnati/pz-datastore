@@ -12,5 +12,7 @@ module.exports = (app) => {
         .use('/', require('./static'))
         .use('/api/v1/auth', require('./core/auth'))
         .use('/api/v1/users', require('./api/user'))
+        .use('/api/v1/departures', require('./api/departure'))
+        .use('/api/v1/products', require('./api/product'))
         .use('/api/v1/expenses', require('./api/citation'));
 };
