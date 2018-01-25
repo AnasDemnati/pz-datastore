@@ -5,8 +5,8 @@
 module.exports = {
   // MongoDB connection options
   mongo: {
-    uri: 'mongodb://localhost/leaderAccountSystem'
-    // uri: 'mongodb://otawara:rouidate159357@ds011432.mlab.com:11432/easyshopdb'
+    // uri: 'mongodb://localhost/leaderAccountSystem'
+    uri: 'mongodb://anasdemnati2:rouidate159357@ds213688.mlab.com:13688/leader-account-system'
   },
 
   seedDB: true

@@ -3,8 +3,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const leaderAccountSystemDB = require('../config-db').leaderAccountSystemDB;
-
 const ProductSchema = new Schema({
     productCode: String,
     brandName: String,
@@ -26,4 +24,4 @@ const ProductSchema = new Schema({
     }
 });
 
-module.exports = leaderAccountSystemDB.model('Product', ProductSchema);
+module.exports = mongoose.model('Product', ProductSchema);

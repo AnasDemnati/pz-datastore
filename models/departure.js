@@ -3,8 +3,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const leaderAccountSystemDB = require('../config-db').leaderAccountSystemDB;
-
 const DepartureSchema = new Schema({
     tripCode: String,
     userCode: {
@@ -80,4 +78,4 @@ const DepartureSchema = new Schema({
     }
 });
 
-module.exports = leaderAccountSystemDB.model('Departure', DepartureSchema);
+module.exports = mongoose.model('Departure', DepartureSchema);

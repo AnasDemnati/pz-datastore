@@ -40,7 +40,9 @@ swig.setDefaults({ cache: false });
 
 const port = process.env.PORT || 3400;
 
-mongoose.connect(config.mongo.uri);
+mongoose.connect(config.mongo.uri, {
+  useMongoClient: true
+});
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));

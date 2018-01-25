@@ -3,8 +3,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const leaderAccountSystemDB = require('../config-db').leaderAccountSystemDB;
-
 const AccountSchema = new Schema({
     startingDate: String,
     productReference: String,
@@ -25,4 +23,4 @@ const AccountSchema = new Schema({
     }
 });
 
-module.exports = leaderAccountSystemDB.model('Account', AccountSchema);
+module.exports = mongoose.model('Account', AccountSchema);

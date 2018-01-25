@@ -38,16 +38,16 @@ exports.getJsonData = (req, res) => {
           id : index,
           isDefault : true,
           saved : true,
-          DayNumber : item.DayNumber,
-          ItineraryDayDate : startingDateformatted,
-          ElementTitle : item.ElementTitle,
-          CurrencyCode : item.CurrencyCode,
+          dayNumber : item.DayNumber,
+          date : startingDateformatted,
+          description : item.ElementTitle,
+          budgetCurrency : item.CurrencyCode,
           PaymentArrangementName : item.PaymentArrangementName,
           PaxCost : item['PaxCost_' + numberOfPax],
           LeaderCost : item['LeaderCost_1'],
           budgetAmount : (parseFloat(item['PaxCost_' + numberOfPax]) + parseFloat(item['LeaderCost_1'])).toFixed(2),
-          actualBudgetAmount : 'N/A',
-          actualBudgetCurrency : 'N/A'
+          actualAmount : 'N/A',
+          actualCurrency : 'N/A'
         });
         index++;
       });
