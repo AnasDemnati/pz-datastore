@@ -5,11 +5,11 @@ const Schema = mongoose.Schema;
 
 const DepartureSchema = new Schema({
     tripCode: String,
-    userCode: {
+    userCodeID: {
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
-    productCode: {
+    productCodeID: {
         type: Schema.Types.ObjectId,
         ref: 'Product'
     },
@@ -17,17 +17,18 @@ const DepartureSchema = new Schema({
     endingDate: Date,
     numberOfPax: String,
     accounts: [{
+        dayNumber: Number,
         date: Date,
         description: String,
         budgetCurrency: {
             type: String,
-            enum: ['Eur'],
+            // enum: ['Eur'],
             default: 'Eur'
         },
         budgetAmount: String,
         actualCurrency: {
             type: String,
-            enum: ['Eur'],
+            // enum: ['Eur'],
             default: 'Eur'
         },
         actualAmount: String,
@@ -35,19 +36,20 @@ const DepartureSchema = new Schema({
         comment: String,
         expenseCategory: {
             type: String,
-            enum: ['Cash given'],
+            // enum: ['Cash given'],
             default: 'Cash given'
         },
         paymentType: {
             type: String,
-            enum: ['CC'],
+            // enum: ['CC'],
             default: 'CC'
         },
-        altUserCode: {
+        cashBalance: Number,
+        altUserCodeID: {
             type: Schema.Types.ObjectId,
             ref: 'User'
         },
-        altTripCode: {
+        altTripCodeID: {
             type: Schema.Types.ObjectId,
             ref: 'Departure'
         },

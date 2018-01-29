@@ -25,7 +25,7 @@ exports.getJsonData = (req, res) => {
       let searchResult = [];
       let index = 0;
 
-      departure.tripCode = productCode + startingDate.toString().replace("-","").substring(2,7);
+      departure.tripCode = productCode + startingDate.toString().replace(/-/g, "");
       departure.productCode = productCode;
       departure.startingDate = moment(startingDate, moment.ISO_8601).format("MM/DD/YYYY H:mm");
       departure.endingDate = moment(startingDate, moment.ISO_8601).add(filteredResultArray[filteredResultArray.length-1].DayNumber, 'd').format("MM/DD/YYYY H:mm");
@@ -46,8 +46,8 @@ exports.getJsonData = (req, res) => {
           PaxCost : item['PaxCost_' + numberOfPax],
           LeaderCost : item['LeaderCost_1'],
           budgetAmount : (parseFloat(item['PaxCost_' + numberOfPax]) + parseFloat(item['LeaderCost_1'])).toFixed(2),
-          actualAmount : 'N/A',
-          actualCurrency : 'N/A'
+          actualAmount : 0,
+          actualCurrency : ''
         });
         index++;
       });

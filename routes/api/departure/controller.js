@@ -26,7 +26,7 @@ exports.validateDeparture = (req, res, next) => {
 exports.newDeparture = (req, res, next) => {
     let departure = new Departure({
         tripCode: req.body.tripCode,
-        userCode: req.user._id,
+        userCode: "req.user._id",
         productCode: req.body.productCode,
         numberOfPax: req.body.numberOfPax,
         startingDate: req.body.startingDate,
@@ -39,7 +39,7 @@ exports.newDeparture = (req, res, next) => {
         if(err) {
             return res.send({
                 ok: false,
-                message: 'Error in departure creation'
+                message: 'Error in departure creation ' + err
             });
         }
         return res.send({
